@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pozwolenie na broń – powtórka pytań</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F5F1; --card:#FFFFFF; --ink:#1B211D; --muted:#5E675F;
+  --line:#D5DAD3; --olive:#3F5B3B; --ok:#2E7A45; --okbg:#E3F1E6;
+  --bad:#B3261E; --badbg:#F8E3E1; --ring:#1B211D;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131714; --card:#1C221D; --ink:#E7EBE5; --muted:#9BA59C;
+    --line:#2F3830; --olive:#9DBB8F; --ok:#6CC488; --okbg:#1D3324;
+    --bad:#F08A80; --badbg:#3A1E1C; --ring:#E7EBE5;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131714; --card:#1C221D; --ink:#E7EBE5; --muted:#9BA59C;
+  --line:#2F3830; --olive:#9DBB8F; --ok:#6CC488; --okbg:#1D3324;
+  --bad:#F08A80; --badbg:#3A1E1C; --ring:#E7EBE5;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding:20px 18px 40px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.target{flex:none;width:56px;height:56px}
+h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.65rem;line-height:1.1;margin:0}
+.sub{color:var(--muted);font-size:.92rem;margin:2px 0 0}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.modes button,.ctrl{font:inherit;font-weight:600;font-size:.95rem;border:1.5px solid var(--line);
+  background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:var(--paper)}
+.modes button:disabled{opacity:.45;cursor:default}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:8px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;background:var(--olive);width:0;transition:width .25s}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 18px}
+.topic{color:var(--olive);font-weight:600;font-size:.88rem;margin:0 0 6px}
+.qtext{font-weight:600;font-size:1.08rem;margin:0 0 16px}
+.opt{display:flex;gap:12px;width:100%;text-align:left;font:inherit;color:var(--ink);
+  background:transparent;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.opt b{font-family:"Barlow Condensed",sans-serif;font-size:1.15rem;line-height:1.3;flex:none;width:1.1em}
+.opt:hover:not(:disabled){border-color:var(--olive)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.expl{border-left:3px solid var(--olive);padding:4px 0 4px 12px;margin:14px 0 4px;color:var(--ink)}
+.expl strong{display:block;margin-bottom:2px}
+.next{margin-top:16px;width:100%;font:inherit;font-weight:600;font-size:1rem;border:0;border-radius:10px;
+  padding:13px;background:var(--olive);color:var(--paper);cursor:pointer}
+.done{text-align:center;padding:28px 18px}
+.done .big{font-family:"Barlow Condensed",sans-serif;font-size:3rem;font-weight:700;line-height:1}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;color:var(--muted);font-size:.88rem}
+.ctrl{font-size:.85rem;padding:6px 12px}
+.sel{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:.95rem;color:var(--muted)}
+.sel select{flex:1;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qstat{color:var(--muted);font-size:.82rem;margin:0 0 6px}
+.src{display:block;margin-top:6px;color:var(--muted);font-size:.9rem;font-style:italic}
+.grade{display:flex;gap:10px;margin-top:16px}
+.grade button{flex:1;font:inherit;font-weight:600;font-size:1rem;border-radius:10px;padding:13px;cursor:pointer;border:1.5px solid}
+.gok{background:var(--okbg);border-color:var(--ok);color:var(--ink)}
+.gbad{background:var(--badbg);border-color:var(--bad);color:var(--ink)}
+select:focus-visible,button:focus-visible{outline:3px solid var(--olive);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="target" viewBox="0 0 56 56" aria-hidden="true">
+      <circle cx="28" cy="28" r="26" fill="none" stroke="var(--ring)" stroke-width="1.5"/>
+      <circle cx="28" cy="28" r="19" fill="none" stroke="var(--ring)" stroke-width="1.5"/>
+      <circle cx="28" cy="28" r="12" fill="var(--ring)"/>
+      <circle cx="28" cy="28" r="5" fill="none" stroke="var(--paper)" stroke-width="1.5"/>
+      <circle id="hit" cx="28" cy="28" r="2.6" fill="var(--olive)" opacity="0"/>
+    </svg>
+    <div>
+      <h1>Powtórka do egzaminu</h1>
+      <p class="sub">Ustawa o broni i amunicji oraz przepisy ISSF</p>
+    </div>
+  </header>
+
+  <div class="modes" role="group" aria-label="Zakres pytań">
+    <button id="mAll" aria-pressed="true">Wszystkie pytania</button>
+    <button id="mWrong" aria-pressed="false">Do poprawki (<span id="wc">0</span>)</button>
+  </div>
+
+  <label class="sel"><span>Dział</span><select id="topic"></select></label>
+
+  <div class="meta"><span id="pos"></span><span id="score"></span></div>
+  <div class="bar"><i id="prog"></i></div>
+
+  <main id="stage"></main>
+
+  <div class="foot">
+    <span>Pytanie wypada z poprawki po 2 dobrych odpowiedziach z rzędu</span>
+    <button class="ctrl" id="reset">Wyczyść postęp</button>
+  </div>
+</div>
+
+<script>
+const Q = [
+ {t:"Ustawa",q:"Policja może za pokwitowaniem odebrać broń osobie, przeciwko której toczy się postępowanie karne o umyślne przestępstwo, do czasu prawomocnego zakończenia postępowania, na okres",o:["nie dłuższy niż 3 lata","1 roku","do 2 lat"],a:0,e:"Art. 19 ust. 1a: do prawomocnego zakończenia postępowania, ale nie dłużej niż 3 lata."},
+ {t:"Ustawa",q:"Znalazca broni",o:["może wystąpić z wnioskiem o pozwolenie na znalezioną broń","nie ma żadnych praw względem znalezionej broni","może złożyć oświadczenie o przeniesieniu własności znalezionej broni na rzecz Skarbu Państwa"],a:1,e:"Znalazca nie nabywa własności broni ani znaleźnego. Nie może przenieść własności, której nie ma (art. 23 ust. 2 wprost wyłącza znalazcę)."},
+ {t:"Ustawa",q:"Osoba nabywająca broń poza UE, bez pozwolenia na broń, jest obowiązana",o:["przy przekraczaniu granicy pisemnie zgłosić przywóz najbliższej jednostce Policji","złożyć broń do depozytu organu celnego i w ciągu 14 dni wystąpić do Policji o pozwolenie","zarejestrować broń w ciągu 5 dni od nabycia"],a:1,e:"Art. 37 ust. 3: depozyt celny i 14 dni na wniosek. Rejestracja w 5 dni dotyczy osób, które już mają pozwolenie."},
+ {t:"Egzamin",q:"Zakres teoretycznej części egzaminu ze znajomości przepisów obejmuje",o:["ustawę o broni i amunicji, przepisy wydane na jej podstawie oraz przepisy Kodeksu karnego o przestępstwach z bronią","ustawę o broni i amunicji oraz przepisy Kodeksu karnego o przestępstwach z bronią","posługiwanie się bronią i wzorowy regulamin strzelnic"],a:0,e:"B pomija rozporządzenia wykonawcze. C to część praktyczna."},
+ {t:"Ustawa",q:"Regulamin strzelnicy zatwierdza",o:["uchwała radnych miasta","organ Policji właściwy ze względu na adres strzelnicy","wójt, burmistrz lub prezydent miasta"],a:2,e:"Art. 47: organ gminy właściwy dla lokalizacji strzelnicy."},
+ {t:"Cele pozwoleń",q:"Pozwolenie do ochrony osobistej uprawnia m.in. do posiadania",o:["broni bojowej i alarmowej: pistolety i rewolwery centralnego zapłonu 6–9 mm","broni bojowej i gazowej: pistolety i rewolwery centralnego zapłonu 6–9 mm","broni bojowej, gazowej i alarmowej: pistolety i rewolwery centralnego zapłonu 6–12 mm"],a:2,e:"Kluczowy jest zakres kalibru: 6–12 mm, nie 9 mm."},
+ {t:"Amunicja",q:"Amunicja szczególnie niebezpieczna to amunicja wytworzona niefabrycznie, z wyłączeniem amunicji wytwarzanej na własny użytek przez osoby z pozwoleniem na broń",o:["myśliwską, pamiątkową lub kolekcjonerską","myśliwską, sportową lub kolekcjonerską","pamiątkową, sportową lub kolekcjonerską"],a:1,e:"Elaborować mogą myśliwi, sportowcy i kolekcjonerzy. Pamiątkowe tego nie daje."},
+ {t:"Bez pozwolenia",q:"Miotacze gazu obezwładniającego można posiadać",o:["na podstawie karty rejestracyjnej miotacza gazu","na podstawie pozwolenia na broń","bez zezwolenia"],a:1,e:"Miotacze są bronią, więc co do zasady wymagają pozwolenia. Bez pozwolenia tylko RĘCZNE miotacze (art. 11 pkt 8). Brak słowa „ręczne” oznacza pozwolenie."},
+ {t:"Cele pozwoleń",q:"Pozwolenie kolekcjonerskie lub pamiątkowe uprawnia do broni odpowiadającej celom",o:["ochrony osobistej, ochrony osób lub mienia, łowieckim, sportowym, z wyłączeniem broni samoczynnej","ochrony osobistej, ochrony osób lub mienia, łowieckim, sportowym, szkoleniowym, rekonstrukcji historycznej","ochrony osobistej, ochrony osób lub mienia, łowieckim, rekonstrukcji historycznych"],a:1,e:"Kolekcjonerka i pamiątkowe obejmują pkt 1–6, czyli wszystkie pozostałe cele."},
+ {t:"Amunicja",q:"Do amunicji szczególnie niebezpiecznej zalicza się amunicję",o:["wykonaną przez myśliwego na własne potrzeby, o zwiększonej naważce prochu","o zwiększonym stopniu grzybkowania po uderzeniu w cel","z pociskami pełnopłaszczowymi z rdzeniem twardszym niż stop ołowiu"],a:2,e:"To amunicja przeciwpancerna. Zwykły FMJ z ołowianym rdzeniem do tej kategorii nie należy."},
+ {t:"Cele pozwoleń",q:"Pozwolenie do celów sportowych uprawnia do posiadania broni",o:["pistoletów sygnałowych","gładkolufowej","alarmowej w postaci rewolwerów centralnego zapłonu 6–12 mm"],a:1,e:"Sport obejmuje broń kulową i gładkolufową (trap, skeet). Alarmowa 6–12 mm to ochrona osobista."},
+ {t:"Ważna przyczyna",q:"Ważna przyczyna posiadania broni do rekonstrukcji historycznej to w szczególności",o:["zaświadczenie o czynnym udziale w rekonstrukcjach","członkostwo w stowarzyszeniu o statutowym celu rekonstrukcji ORAZ zaświadczenie o czynnym udziale w działalności statutowej","członkostwo w stowarzyszeniu organizującym rekonstrukcje"],a:1,e:"Rekonstrukcja to członkostwo i zaświadczenie. Kolekcjonerka to samo członkostwo."},
+ {t:"Cele pozwoleń",q:"Pozwolenie do celów szkoleniowych uprawnia do broni odpowiadającej celom",o:["ochrony osobistej, ochrony osób lub mienia, łowieckim, sportowym, kolekcjonerskim","ochrony osobistej, ochrony osób lub mienia, łowieckim, sportowym","ochrony osobistej, ochrony osób lub mienia, łowieckim, sportowym, z wyłączeniem broni samoczynnej na proch czarny"],a:1,e:"Szkoleniowe obejmuje pkt 1–4. Kolekcjonerka i pamiątkowe obejmują pkt 1–6."},
+ {t:"Cele pozwoleń",q:"Pozwolenie do ochrony osobistej uprawnia do posiadania",o:["broni bojowej, gazowej, alarmowej (pistolety i rewolwery centralnego zapłonu 6–12 mm), paralizatorów powyżej 10 mA, miotaczy gazu","pistoletów, rewolwerów lub karabinów centralnego zapłonu 6–12 mm, pistoletów sygnałowych, miotaczy gazu","broni bojowej, gazowej, alarmowej (pistolety i rewolwery 6–12 mm) lub strzelb gładkolufowych"],a:0,e:"Ochrona osobista to tylko broń krótka i środki obezwładniające. Karabiny i strzelby odpadają."},
+ {t:"Bez pozwolenia",q:"Bez pozwolenia można posiadać broń czarnoprochową",o:["na podstawie Karty Rejestracji Broni","na naboje scalone, wytworzoną przed 1895 r., lub jej repliki","rozdzielnego ładowania, wytworzoną przed 1885 r., lub jej repliki"],a:2,e:"Art. 11 pkt 10: rozdzielne ładowanie i rok 1885."},
+ {t:"Amunicja",q:"Amunicją szczególnie niebezpieczną jest amunicja z pociskami",o:["nadkalibrowymi, z płaszczem z tworzyw sztucznych, z wyłączeniem amunicji do broni gładkolufowej","podkalibrowymi, z płaszczem z tworzyw sztucznych, z wyłączeniem amunicji do broni gładkolufowej","szkolnymi, z płaszczem z tworzyw sztucznych, z wyłączeniem amunicji do broni gładkolufowej"],a:1,e:"Pocisk podkalibrowy siedzi w plastikowym sabocie, ma dużą przebijalność. Breneki sabotowe do strzelb są wyłączone."},
+ {t:"Badania",q:"Osoba z pozwoleniem sportowym jest obowiązana przedstawić Policji aktualne orzeczenie lekarskie i psychologiczne",o:["nie ma takiego obowiązku","raz na 5 lat","tylko przy przedłużaniu licencji zawodniczej"],a:1,e:"KLUCZ: B. Uwaga: według obecnego art. 15 ust. 4 co 5 lat badają się tylko osoby z pozwoleniem do ochrony osobistej oraz ochrony osób i mienia. Baza pytań jest tu nieaktualna, ale na egzaminie zaznacz klucz."},
+ {t:"Bez pozwolenia",q:"Pozwolenia na broń nie wymaga się w przypadku",o:["posiadania broni pneumatycznej","dysponowania bronią cudzą","posiadania pistoletów i rewolwerów gazowych"],a:0,e:"Art. 11 pkt 9. Potrzebna jest jednak karta rejestracyjna broni pneumatycznej."},
+ {t:"Cele pozwoleń",q:"Pozwolenie kolekcjonerskie może być wydane na pistolety i rewolwery centralnego zapłonu o kalibrze",o:["6,35 mm","12,43 mm","15,56 mm"],a:0,e:"Górny limit to 12 mm. 6,35 mm to .25 ACP."},
+ {t:"Ważna przyczyna",q:"Ważna przyczyna posiadania broni do celów łowieckich to w szczególności",o:["członkostwo w stowarzyszeniu związanym z myślistwem","posiadanie uprawnień do wykonywania polowania","udokumentowana tradycja rodzinna związana z myślistwem"],a:1,e:"Art. 10 ust. 3 pkt 2. W praktyce zdany egzamin łowiecki."},
+ {t:"Cele pozwoleń",q:"Pozwolenie do celów łowieckich uprawnia do posiadania broni",o:["dopuszczonej do wykonywania polowań na podstawie odrębnych przepisów","centralnego zapłonu z lufami gwintowanymi do 12 mm, gładkolufowej","dopuszczonej do polowań oraz pistoletów lub rewolwerów"],a:0,e:"Ustawa odsyła do przepisów łowieckich. Pistoletów i rewolwerów tu nie ma."},
+ {t:"Noszenie",q:"Posiadacze pozwoleń kolekcjonerskich mogą nosić broń",o:["przemieszczając się na strzelnicę","wyłącznie za zgodą właściwego organu Policji","ukrytą, w kaburze lub futerale"],a:1,e:"Art. 10 ust. 8. Noszenie to przemieszczanie załadowanej broni. Rozładowaną można przewieźć."},
+ {t:"Ustawa",q:"Europejska karta broni palnej wydawana jest na okres",o:["niezbędny do zakupu i przewiezienia broni przez terytorium państwa UE","bezterminowo","do 5 lat"],a:2,e:"Art. 10a ust. 2. Bezterminowo wydawane jest samo pozwolenie."},
+ {t:"Cele pozwoleń",q:"Pozwolenie do rekonstrukcji historycznych uprawnia do broni",o:["przystosowanej do strzelania wyłącznie prochem czarnym","strzelb powtarzalnych kal. 12","alarmowej albo innej broni palnej przeznaczonej do strzelania wyłącznie amunicją ślepą, w tym samoczynnej"],a:2,e:"Rekonstruktor dostaje broń na ślepaki, nawet samoczynną. Czarnoprochowa należy do sportu."},
+ {t:"Nabywanie",q:"Czy dopuszcza się nabywanie broni przy użyciu środków porozumiewania się na odległość?",o:["tak, ale nabywca z RP dostarcza zbywcy z innego państwa zgodę przewozową i upoważnienie władz","tak, ale nabywca z RP dostarcza zbywcy z RP zaświadczenie uprawniające do nabycia","nie, chyba że ma się upoważnienie swojego państwa"],a:1,e:"Art. 12a ust. 2 pkt 1: przed wydaniem broni promesa. Zgoda przewozowa dotyczy nabywców z zagranicy."},
+ {t:"Bez pozwolenia",q:"Pozwolenia na broń nie wymaga się w przypadku",o:["posiadania broni palnej pozbawionej cech użytkowych","posiadania broni alarmowej o kalibrze do 6 mm","posiadania broni rozdzielnego ładowania wytworzonej po 1885 r."],a:0,e:"KLUCZ: A. Uwaga: według obecnej ustawy B też jest prawdziwe (art. 11 pkt 11). Baza nie uwzględnia późniejszej zmiany."},
+ {t:"Cele pozwoleń",q:"Pozwolenie na broń bojową do ochrony osobistej lub ochrony osób i mienia stanowi jednocześnie pozwolenie na",o:["broń gazową","broń gazową i alarmową","broń sygnałową"],a:1,e:"Art. 9 ust. 7. Bojowa obejmuje „z automatu” gazową i alarmową, nigdy sygnałową, bo ta jest osobną pozycją katalogu."},
+ {t:"Przeszkody",q:"Czy osoba prawomocnie skazana za umyślne przestępstwo lub przestępstwo skarbowe może otrzymać pozwolenie?",o:["tak","tak, o ile minął przynajmniej rok od skazania","tak, jeśli skazanie uległo zatarciu"],a:2,e:"Po zatarciu skazanie uważa się za niebyłe (art. 106 k.k.)."},
+ {t:"Nabywanie",q:"Rejestracji nabytej broni dokonuje się na podstawie",o:["legitymacji posiadacza broni","świadectwa broni","dowodu nabycia broni"],a:2,e:"Art. 13 ust. 2. W legitymacji i świadectwie rejestrację się potwierdza."},
+ {t:"Nabywanie",q:"Nabywanie broni lub amunicji przy użyciu środków porozumiewania się na odległość jest",o:["dozwolone tylko u podmiotu z koncesją","dozwolone","zabronione"],a:1,e:"Art. 12a ust. 1 mówi to wprost."},
+ {t:"Przeszkody",q:"Czy osoba skazana za nieumyślne przestępstwo przeciwko życiu i zdrowiu może otrzymać pozwolenie?",o:["tak","tak, jeśli uzyska pozytywną opinię dzielnicowego","nie"],a:2,e:"Art. 15 ust. 1 pkt 6 lit. b."},
+ {t:"ISSF – pistolet",q:"Broń pneumatyczna kal. 4,5 mm to m.in.",o:["karabiny do 4500 g, dowolny opór spustu, odległość wylot–koniec celownika do 650 mm","pistolety do 1500 g, opór spustu co najmniej 500 g, pudełko 420×200×50 mm","pistolety do 1600 g, opór spustu co najmniej 600 g, pudełko 420×200×50 mm"],a:1,e:"Pistolet pneumatyczny: 1500 g, 500 g, 420×200×50. Karabin pneumatyczny: 5,5 kg i system do 850 mm."},
+ {t:"ISSF – amunicja",q:"Dopuszczona do strzelań według ISSF jest m.in. amunicja",o:["bocznego zapłonu .22 LR","dowolna od .22 LR do .45, typu magnum","bocznego zapłonu .22 LR oraz centralnego zapłonu od .38 do .45"],a:0,e:"Centralny zapłon w ISSF to .30–.38, magnum zakazane."},
+ {t:"ISSF – pistolet",q:"Ograniczenia regulaminowe pistoletu centralnego zapłonu",o:["7,62–9,65 lub do 12 mm, 1400 g, 1000 g, ZAMKNIĘTE przyrządy, 220 mm, lufa 153 mm, pudełko 300×150×50","5,6 mm, 1400 g, 1000 g, otwarte przyrządy, 220 mm, lufa 153 mm, pudełko 300×150×50","7,62–9,65 według ISSF lub do 12 mm według ustawy, 1400 g, 1000 g, otwarte przyrządy, 220 mm, lufa 153 mm, pudełko 300×150×50"],a:2,e:"W pistoletach ISSF tylko otwarte przyrządy. 5,6 mm to pistolet sportowy."},
+ {t:"ISSF – dystanse",q:"Jakie konkurencje są strzelane na 300 m według ISSF?",o:["karabin dowolny (duży kaliber), karabin standardowy","karabin dowolny (mały kaliber), karabin standardowy","karabin dowolny (mały i duży kaliber), karabin standardowy"],a:0,e:"Mały kaliber (.22 LR) strzela się na 50 m."},
+ {t:"ISSF – dystanse",q:"Do pięciu tarcz z pistoletu strzela się na dystansie",o:["10 m","25 m","50 m"],a:1,e:"Pistolet szybkostrzelny: po jednym strzale do każdej z pięciu tarcz w 8, 6 lub 4 s."},
+ {t:"ISSF – dystanse",q:"Jakie konkurencje są strzelane na 50 m według ISSF?",o:["pistolet szybkostrzelny, karabin dowolny, ruchoma tarcza (karabin małokalibrowy)","pistolet dowolny, karabin dowolny, ruchoma tarcza (karabin małokalibrowy)","karabin dowolny, ruchoma tarcza (karabin małokalibrowy)"],a:1,e:"Pistolet dowolny to 50 m. Szybkostrzelny to 25 m."},
+ {t:"ISSF – dystanse",q:"Karabin dowolny 60 strzałów leżąc to konkurencja strzelana na dystansie",o:["50 m","100 m","300 m"],a:0,e:"Najpewniej A. W aktualnych przepisach ISSF ta konkurencja jest na 50 m i 300 m, więc sprawdź klucz."},
+ {t:"ISSF – karabin",q:"Ograniczenia regulaminowe karabinu małokalibrowego do ruchomej tarczy",o:["5,6 mm, 8000 g, spust co najmniej 1000 g, optyka do 6x, lufa do 1000 mm","5,6 mm, 6500 g, spust co najmniej 100 g, optyka do 4x, lufa do 1000 mm","5,6 mm, 5500 g, spust co najmniej 500 g, optyka bez ograniczeń krotności, lufa do 1000 mm"],a:2,e:"Ruchoma tarcza to 5,5 kg, 500 g i optyka. 8 kg ma tylko karabin dowolny."},
+ {t:"ISSF – pistolet",q:"Broń palna małokalibrowa bocznego zapłonu to m.in. pistolet dowolny, czyli jednostrzałowy kal. 5,6 mm",o:["mieszczący się w pudełku 420×200×50 mm, o dowolnym ciężarze i oporze spustu","o dowolnych wymiarach, ciężarze do 1400 g i dowolnym oporze spustu","o dowolnych wymiarach, dowolnym ciężarze i dowolnym oporze spustu"],a:2,e:"Pistolet dowolny nie ma ograniczeń. A dokleja pudełko z pneumatyka, B ciężar z pistoletów 25 m."}
+];
+
+// Stabilne identyfikatory: nowe pytania zawsze dopisujemy na końcu tablicy.
+Q.forEach((q,k)=>{ q.id = q.id || ("abc"+(k+1)); q.type = q.type || "abc"; });
+
+const OLD_KEY = "quizPatentWrong_v1", KEY = "quizPatentStats_v2", NEED = 2;
+const L = ["A","B","C","D"];
+let stats = {};
+try {
+  const s = localStorage.getItem(KEY);
+  if (s) stats = JSON.parse(s) || {};
+  else {
+    const old = localStorage.getItem(OLD_KEY);
+    if (old) JSON.parse(old).forEach(k => { if (Q[k]) stats[Q[k].id] = {ok:0,bad:1,streak:0}; });
+  }
+} catch(e) { stats = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(stats)); } catch(e) {} }
+const st = id => stats[id] || (stats[id] = {ok:0,bad:0,streak:0});
+const isWeak = q => { const s = stats[q.id]; return !!s && s.bad > 0 && s.streak < NEED; };
+
+let mode = "all", topic = "", order = [], i = 0, good = 0, answered = false;
+const $ = id => document.getElementById(id);
+function shuffle(a){ for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];} return a; }
+const esc = t => String(t).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function fillTopics(){
+  const sel = $("topic"), topics = [...new Set(Q.map(q=>q.t))];
+  sel.innerHTML = '<option value="">Wszystkie działy</option>' + topics.map(t=>`<option>${esc(t)}</option>`).join("");
+  sel.onchange = () => { topic = sel.value; start(mode); };
+}
+function pool(m){
+  return Q.filter(q => (!topic || q.t === topic) && (m !== "wrong" || isWeak(q)));
+}
+function start(m){
+  mode = m; order = shuffle(pool(m)); i = 0; good = 0;
+  $("mAll").setAttribute("aria-pressed", m==="all");
+  $("mWrong").setAttribute("aria-pressed", m==="wrong");
+  render();
+}
+function updateMeta(){
+  const weak = Q.filter(isWeak).length;
+  $("wc").textContent = weak;
+  $("mWrong").disabled = weak === 0 && mode !== "wrong";
+  const n = order.length;
+  $("pos").textContent = n ? `Pytanie ${Math.min(i+1,n)} z ${n}` : "";
+  $("score").textContent = n ? `Dobrze: ${good}` : "";
+  $("prog").style.width = n ? (i/n*100)+"%" : "0";
+}
+function statLine(q){
+  const s = stats[q.id];
+  if (!s || (!s.ok && !s.bad)) return "Pierwsze podejście";
+  const left = isWeak(q) ? ` · do zaliczenia: ${NEED - s.streak} dobre z rzędu` : "";
+  return `Dobrze ${s.ok} · źle ${s.bad}${left}`;
+}
+function render(){
+  answered = false;
+  $("hit").setAttribute("opacity","0");
+  updateMeta();
+  const box = $("stage");
+  if (!order.length){
+    box.innerHTML = `<div class="q done"><p class="big">0</p><p>${mode==="wrong" ? "Nic do poprawki w tym zakresie." : "Brak pytań w tym dziale."}</p><button class="next" id="again">Wszystkie pytania</button></div>`;
+    $("again").onclick = () => { topic=""; $("topic").value=""; start("all"); };
+    return;
+  }
+  if (i >= order.length){
+    $("prog").style.width = "100%";
+    const weak = Q.filter(isWeak).length;
+    box.innerHTML = `<div class="q done"><p class="big">${good}/${order.length}</p><p>${weak ? `Do poprawki: ${weak}.` : "Wszystko zaliczone."}</p>
+      <button class="next" id="again">Jeszcze raz</button>
+      ${weak ? '<button class="next" id="fix" style="margin-top:10px">Tylko do poprawki</button>' : ''}</div>`;
+    $("again").onclick = () => start(mode === "wrong" && weak ? "wrong" : "all");
+    if (weak) $("fix").onclick = () => start("wrong");
+    return;
+  }
+  const q = order[i];
+  const head = `<div class="qhead"><p class="topic">${esc(q.t)}</p><p class="qstat">${statLine(q)}</p></div><p class="qtext">${esc(q.q)}</p>`;
+  if (q.type === "card"){
+    box.innerHTML = `<div class="q">${head}<button class="next" id="show">Pokaż odpowiedź</button><div id="after"></div></div>`;
+    $("show").onclick = () => {
+      $("show").remove();
+      $("after").innerHTML = `<div class="expl"><strong>Odpowiedź</strong>${esc(q.ans)}${q.src ? `<span class="src">${esc(q.src)}</span>` : ""}</div>
+        <div class="grade"><button class="gbad" id="gNo">Nie umiałem</button><button class="gok" id="gYes">Umiałem</button></div>`;
+      $("gYes").onclick = () => grade(q, true, true);
+      $("gNo").onclick = () => grade(q, false, true);
+    };
+    return;
+  }
+  box.innerHTML = `<div class="q">${head}
+    ${q.o.map((t,j)=>`<button class="opt" data-j="${j}"><b>${L[j]}</b><span>${esc(t)}</span></button>`).join("")}
+    <div id="after"></div></div>`;
+  box.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(q, +b.dataset.j));
+}
+function grade(q, ok, isCard){
+  const s = st(q.id);
+  if (ok){ good++; s.ok++; s.streak++; $("hit").setAttribute("opacity","1"); }
+  else { s.bad++; s.streak = 0; }
+  save();
+  if (isCard){ i++; render(); }
+}
+function pick(q, j){
+  if (answered) return; answered = true;
+  const ok = j === q.a;
+  document.querySelectorAll(".opt").forEach((b,n) => {
+    b.disabled = true;
+    if (n === q.a) b.classList.add("ok"); else if (n === j) b.classList.add("bad");
+  });
+  grade(q, ok, false);
+  $("after").innerHTML = `<div class="expl"><strong>${ok ? "Dobrze." : "Poprawna odpowiedź: " + L[q.a] + "."}</strong>${esc(q.e)}</div>
+    <button class="next" id="nx">${i+1 < order.length ? "Następne pytanie" : "Zobacz wynik"}</button>`;
+  $("nx").onclick = () => { i++; render(); };
+  $("nx").focus();
+  updateMeta();
+}
+$("mAll").onclick = () => start("all");
+$("mWrong").onclick = () => start("wrong");
+$("reset").onclick = () => { if (confirm("Wyczyścić całą historię odpowiedzi?")) { stats = {}; save(); start("all"); } };
+fillTopics();
+start("all");
+</script>
+</body>
+</html>
