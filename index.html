@@ -274,6 +274,17 @@ $("export").onclick = async () => {
   msg.textContent = copied ? `Skopiowano ${weak.length} ${pl(weak.length)}. Wklej to w rozmowie z Claude.` : `Zaznacz tekst poniżej i skopiuj go do rozmowy z Claude (${weak.length} ${pl(weak.length)}).`;
   if (!copied){ ta.focus(); ta.select(); }
 };
+// Po powrocie do karty (np. następnego dnia) odśwież listę „Na dziś” bez przeładowania strony.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible") return;
+  if (mode === "learn") {
+    const ids = new Set(order.map(q => q.id));
+    const fresh = shuffle(pool("learn").filter(q => !ids.has(q.id)));
+    if (i >= order.length || !order.length) { start("learn"); return; }
+    order.push(...fresh);
+  }
+  updateMeta();
+});
 fillTopics();
 start("learn");
 </script>
